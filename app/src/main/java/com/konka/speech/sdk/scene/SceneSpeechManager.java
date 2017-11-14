@@ -21,37 +21,46 @@ public class SceneSpeechManager {
     }
 
     /**
+     * 获取第一个匹配的关键词
+     *
+     * @param word 用户的说法
+     * @return 第一个匹配的关键词
+     */
+    public SceneKeywords getSceneKeywords(String word) {
+        Object keywords = mSceneSpeechMode.getKeywords();
+        if (keywords instanceof SceneKeywords) {
+            List<String> keywordsList = ((SceneKeywords) keywords).getKeywordsList();
+            if (keywordsList != null && keywordsList.contains(word)) {
+                return (SceneKeywords) keywords;
+            }
+
+        }
+        return null;
+    }
+
+    /**
      * 获取包含某个关键词的列表
      *
-     * @param words  关键词
+     * @param word   关键词
      * @param result 包含某个关键词的列表
      */
-    public void getSceneKeywords(String words, List<SceneKeywords> result) {
+    public void getSceneKeywords(String word, List<SceneKeywords> result) {
         if (result != null) {
             Object keywords = mSceneSpeechMode.getKeywords();
             if (keywords instanceof SceneKeywords) {
+                List<String> keywordsList = ((SceneKeywords) keywords).getKeywordsList();
+                if (keywordsList != null && keywordsList.contains(word)) {
+                    result.add((SceneKeywords) keywords);
+                }
                 result.add((SceneKeywords) keywords);
             } else if (keywords instanceof List) {
                 for (SceneKeywords sceneKeywords : ((List<SceneKeywords>) keywords)) {
-                    if (sceneKeywords.getKeywordsList().contains(words)) {
+                    if (sceneKeywords.getKeywordsList().contains(word)) {
                         result.add(sceneKeywords);
                     }
                 }
             }
         }
-    }
-
-    public boolean resetPkgSceneKeywords(String pkgName) {
-        return mSceneSpeechMode.resetKeywords(pkgName);
-    }
-
-    /**
-     * 关键词命中，反馈给第三方进程
-     *
-     * @param keywords 关键词
-     */
-    public void hitKeywords(String keywords) {
-
     }
 
     /**
@@ -84,6 +93,10 @@ public class SceneSpeechManager {
         }
 
         return false;
+    }
+
+    public boolean resetPkgSceneKeywords(String pkgName) {
+        return mSceneSpeechMode.resetKeywords(pkgName);
     }
 
     public void release() {
