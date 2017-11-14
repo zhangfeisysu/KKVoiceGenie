@@ -105,9 +105,6 @@ public class SceneSpeechManager {
         return mSceneSpeechMode.resetKeywords(pkgName);
     }
 
-    /**
-     * 清理操作
-     */
     public void release() {
         mSceneSpeechMode.release();
     }
