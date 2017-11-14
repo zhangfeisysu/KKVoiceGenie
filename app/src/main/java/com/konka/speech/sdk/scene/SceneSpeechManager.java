@@ -95,6 +95,12 @@ public class SceneSpeechManager {
         return false;
     }
 
+    /**
+     * reset关键词
+     *
+     * @param pkgName
+     * @return
+     */
     public boolean resetPkgSceneKeywords(String pkgName) {
         return mSceneSpeechMode.resetKeywords(pkgName);
     }
