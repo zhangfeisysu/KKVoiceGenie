@@ -54,7 +54,7 @@ public class DuiSpeechRecognizer extends BaseSpeechRecognizer {
     public void startRecognize() {
         ZLogger.d("DuiSpeechRecognizer 开始识别");
         try {
-            Thread.sleep(1500);
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

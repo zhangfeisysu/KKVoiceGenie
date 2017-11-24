@@ -2,7 +2,11 @@ package com.konka.speech.sdk.scene;
 
 import android.content.Context;
 
+import com.konka.speech.di.ForService;
+
 import java.util.List;
+
+import javax.inject.Inject;
 
 /**
  * 全程语音控制中心
@@ -15,7 +19,8 @@ public class SceneSpeechManager {
     private Context mContext;
     private SceneSpeechMode mSceneSpeechMode;
 
-    public SceneSpeechManager(Context context) {
+    @Inject
+    public SceneSpeechManager(@ForService Context context) {
         mContext = context;
         mSceneSpeechMode = new SceneSpeechModeImpl(context);
     }

@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
+import javax.inject.Inject;
+
 import static com.konka.speech.constant.IntentConstants.EXTRA_PACKAGE_NAME;
 import static com.konka.speech.sdk.constant.IntentConstants.ACTION_SCENE_SPEECH_FEEDBACK;
 import static com.konka.speech.sdk.constant.IntentConstants.ACTION_SCENE_SPEECH_UPLOAD_KEYWORDS;
@@ -21,6 +23,7 @@ class SceneSpeechModeImpl extends SceneSpeechMode<SceneKeywords> {
     SceneSpeechModeReceiver mSceneSpeechModeReceiver;
     private SceneKeywords mSceneKeywords;
 
+    @Inject
     SceneSpeechModeImpl(Context context) {
         super(context);
         mSceneKeywords = new SceneKeywords();

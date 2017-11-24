@@ -3,6 +3,8 @@ package com.konka.speech.mediator;
 import android.content.Context;
 import android.content.Intent;
 
+import javax.inject.Inject;
+
 /**
  * @author ZhangFei
  * @date 2017=11=3
@@ -13,9 +15,13 @@ import android.content.Intent;
 
 public abstract class SpeechMediator {
     protected Context mContext;
+    @Inject
     protected BaseSpeechRecognizer mSpeechRecognizer;
+    @Inject
     protected BaseSemanticProcessor mSemanticProcessor;
+    @Inject
     protected BaseTTSEngine mTTSEngine;
+    @Inject
     protected BaseSpeechView mSpeechView;
 
     public SpeechMediator(Context context) {

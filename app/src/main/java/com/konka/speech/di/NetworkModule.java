@@ -1,4 +1,4 @@
-package com.konka.speech.di.module;
+package com.konka.speech.di;
 
 import android.content.Context;
 
@@ -16,13 +16,19 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * @author ZhangFei
- * @date 2017-11-17
+ * @date 2017-11-23
  */
 @Module
-public class NetModule {
+public class NetworkModule {
+    private String mBaseUrl = "http://www.github.com";
+
+    //    public NetworkModule(String baseUrl) {
+//        this.mBaseUrl = baseUrl;
+//    }
+
     @Provides
     @Singleton
-    public OkHttpClient provideOkHttpClient(Context context) {
+    public OkHttpClient provideOkHttpClient(@ForApp Context context) {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .connectTimeout(50, TimeUnit.SECONDS)
                 .build();
@@ -33,7 +39,7 @@ public class NetModule {
     @Singleton
     public Retrofit provideRetrofit(OkHttpClient okHttpClient) {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://www.github.com")
+                .baseUrl(mBaseUrl)
                 .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();

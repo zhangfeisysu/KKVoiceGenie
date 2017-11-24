@@ -18,6 +18,8 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import static android.content.Context.CONNECTIVITY_SERVICE;
 import static android.net.ConnectivityManager.CONNECTIVITY_ACTION;
 import static android.os.Process.THREAD_PRIORITY_BACKGROUND;
@@ -55,12 +57,14 @@ class Dispatcher {
 
     private static final String DISPATCHER_THREAD_NAME = "Dispatcher";
 
-    Dispatcher(Context context, VoiceGenie voiceGenie, Handler mainHandler) {
+    @Inject
+    public Dispatcher(Context context, VoiceGenie voiceGenie, Handler mainHandler) {
         mContext = context;
         mMainHandler = mainHandler;
         mVoiceGenie = voiceGenie;
         mDispatcherThread = new HandlerThread(DISPATCHER_THREAD_NAME, THREAD_PRIORITY_BACKGROUND);
         mDispatcherThread.start();
+
         mHandler = new DispatcherHandler(mDispatcherThread.getLooper(), this);
         mConversationMap = new LinkedHashMap<>();
         mNetworkBroadcastReceiver = new NetworkBroadcastReceiver(this);
@@ -138,12 +142,12 @@ class Dispatcher {
         if (conversation != null && !conversation.isCanceled()) {
             ZLogger.d("Dispatcher 执行录音操作");
             VoiceGenie voiceGenie = conversation.getVoiceGenie();
-            mMainHandler.dispatchMessage(mMainHandler.obtainMessage(CONVERSATION_RECORD_START, conversation));
+            mMainHandler.sendMessage(mMainHandler.obtainMessage(CONVERSATION_RECORD_START, conversation));
             //TODO voiceGenie->record(callback);在回调中执行下面音量变化，录音完成操作。然后调用performRecognize()开始语音识别
             if (voiceGenie.getSpeechRecognizer() != null) {
                 voiceGenie.getSpeechRecognizer().startRecord();
-                mMainHandler.dispatchMessage(mMainHandler.obtainMessage(CONVERSATION_RECORD_VOLUME, conversation));
-                mMainHandler.dispatchMessage(mMainHandler.obtainMessage(CONVERSATION_RECORD_COMPLETE, conversation));
+                mMainHandler.sendMessage(mMainHandler.obtainMessage(CONVERSATION_RECORD_VOLUME, conversation));
+                mMainHandler.sendMessage(mMainHandler.obtainMessage(CONVERSATION_RECORD_COMPLETE, conversation));
                 performRecognize(conversation);
             } else {
                 throw new IllegalStateException("语音识别引擎未正确初始化");
@@ -155,14 +159,14 @@ class Dispatcher {
         if (conversation != null && !conversation.isCanceled()) {
             ZLogger.d("执行语音识别操作");
             VoiceGenie voiceGenie = conversation.getVoiceGenie();
-            mMainHandler.dispatchMessage(mMainHandler.obtainMessage(CONVERSATION_RECOGNITION_START, conversation));
+            mMainHandler.sendMessage(mMainHandler.obtainMessage(CONVERSATION_RECOGNITION_START, conversation));
             /**TODO voiceGenie->recognize(callback);在回调中执行下面识别完成或识别出错操作。然后调用performTTS()播报，
              * performUnderstanding()开始语义理解
              */
             if (voiceGenie.getSpeechRecognizer() != null) {
                 voiceGenie.getSpeechRecognizer().startRecognize();
                 conversation.setWord("你叫什么名字");
-                mMainHandler.dispatchMessage(mMainHandler.obtainMessage(CONVERSATION_RECOGNITION_COMPLETE, conversation));
+                mMainHandler.sendMessage(mMainHandler.obtainMessage(CONVERSATION_RECOGNITION_COMPLETE, conversation));
                 performTTS(conversation, true);
                 performUnderstanding(conversation);
             } else {
@@ -174,13 +178,13 @@ class Dispatcher {
     private void performUnderstanding(Conversation conversation) {
         if (conversation != null && !conversation.isCanceled()) {
             VoiceGenie voiceGenie = conversation.getVoiceGenie();
-            mMainHandler.dispatchMessage(mMainHandler.obtainMessage(CONVERSATION_UNDERSTANDING_START, conversation));
+            mMainHandler.sendMessage(mMainHandler.obtainMessage(CONVERSATION_UNDERSTANDING_START, conversation));
             //TODO voiceGenie->parse(callback);在回调中执行下面解析完成或解析出错操作。然后调用performTTS()开始语义合成
             if (voiceGenie.getSemanticProcessor() != null) {
                 voiceGenie.getSemanticProcessor().startParse(conversation.getWord());
                 conversation.setReplyType(1);
                 conversation.setReplyContent("我叫康佳语音精灵");
-                mMainHandler.dispatchMessage(mMainHandler.obtainMessage(CONVERSATION_UNDERSTANDING_COMPLETE, conversation));
+                mMainHandler.sendMessage(mMainHandler.obtainMessage(CONVERSATION_UNDERSTANDING_COMPLETE, conversation));
                 performTTS(conversation, false);
                 performComplete(conversation);
             } else {
@@ -196,7 +200,7 @@ class Dispatcher {
             }
 
             VoiceGenie voiceGenie = conversation.getVoiceGenie();
-            mMainHandler.dispatchMessage(mMainHandler.obtainMessage(CONVERSATION_TTS_START, conversation));
+            mMainHandler.sendMessage(mMainHandler.obtainMessage(CONVERSATION_TTS_START, conversation));
             if (voiceGenie.getTTSEngine() != null) {
                 String word;
                 if (isQuestion) {
@@ -206,7 +210,7 @@ class Dispatcher {
                 }
                 //TODO voiceGenie->tts(word,callback);在回调中执行下面播报成功或播报失败出错操作。isQuestion标记播报问句还是回复语句
                 voiceGenie.getTTSEngine().playText(word, 0);
-                mMainHandler.dispatchMessage(mMainHandler.obtainMessage(CONVERSATION_TTS_COMPLETE, conversation));
+                mMainHandler.sendMessage(mMainHandler.obtainMessage(CONVERSATION_TTS_COMPLETE, conversation));
             } else {
                 throw new IllegalStateException("TTS引擎未正确初始化");
             }

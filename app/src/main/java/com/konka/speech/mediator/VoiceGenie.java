@@ -5,9 +5,13 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 
 import com.affy.zlogger.ZLogger;
+import com.konka.speech.di.ForService;
 import com.konka.speech.sdk.scene.SceneSpeechManager;
+
+import javax.inject.Inject;
 
 import static com.konka.speech.mediator.Dispatcher.CONVERSATION_RECOGNITION_COMPLETE;
 import static com.konka.speech.mediator.Dispatcher.CONVERSATION_RECOGNITION_START;
@@ -31,14 +35,15 @@ public class VoiceGenie extends SpeechMediator implements BaseSpeechRecognizer.S
         BaseTTSEngine.TTSListener,
         BaseSpeechView.SpeechViewListener {
 
-    private SceneSpeechManager mSceneSpeechManager;
-
-    private Dispatcher mDispatcher;
-    private int mSessionIdCounter;
+    @Inject
+    SceneSpeechManager mSceneSpeechManager;
+    Dispatcher mDispatcher;
+    private int mSessionIdCounter = -1;
 
     private static final Handler mMainHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
+            Log.d("zftest", "voiceGenie current thread " + Thread.currentThread().getName());
             switch (msg.what) {
                 case CONVERSATION_RECORD_START: {
                     Conversation conversation = (Conversation) msg.obj;
@@ -93,11 +98,12 @@ public class VoiceGenie extends SpeechMediator implements BaseSpeechRecognizer.S
         }
     };
 
-    public VoiceGenie(Context context) {
+    @Inject
+    public VoiceGenie(@ForService Context context) {
         super(context);
         mSessionIdCounter = -1;
         mDispatcher = new Dispatcher(context, this, mMainHandler);
-        mSpeechView = new TestSpeechView(context, this);
+//        mSpeechView = new TestSpeechView(context, this);
     }
 
     @Override
@@ -131,6 +137,8 @@ public class VoiceGenie extends SpeechMediator implements BaseSpeechRecognizer.S
 
     @Override
     public void onRecordStart() {
+        Log.d("zftest", "current thread during onRecordStart:" + Thread.currentThread().getName());
+        ZLogger.d("========== onRecordStart ============");
         mSpeechView.show();
         mSpeechView.performRecord();
     }
@@ -143,27 +151,32 @@ public class VoiceGenie extends SpeechMediator implements BaseSpeechRecognizer.S
     @Override
     public void onRecordComplete() {
         //停止录音动画，准备播放识别动画
+        ZLogger.d("========== onRecordComplete ============");
     }
 
     @Override
     public void onSpeechRecognitionStart() {
+        ZLogger.d("========== onSpeechRecognitionStart ============");
         mSpeechView.performRecognize();
     }
 
     @Override
     public void onSpeechRecognitionComplete(Conversation conversation) {
         //停止识别动画，准备播放解析动画
+        ZLogger.d("================== onSpeechRecognitionComplete" + conversation.getWord() + " ============");
         mSpeechView.showUserWord(conversation);
     }
 
     @Override
     public void onSemanticUnderstandingStart() {
+        ZLogger.d("========== onSemanticUnderstandingStart ============");
         mSpeechView.performParse();
     }
 
     @Override
     public void onSemanticUnderstandingComplete(Conversation conversation) {
-        //停止理解动画，界面上展示用户说法
+        //停止理解动画，界面上展示回复
+        ZLogger.d("======== onSemanticUnderstandingComplete " + conversation.getReplyContent().toString() + " ==========");
         mSpeechView.showReply(conversation);
     }
 
@@ -196,6 +209,7 @@ public class VoiceGenie extends SpeechMediator implements BaseSpeechRecognizer.S
         return mSpeechRecognizer;
     }
 
+    @Inject
     public void setSpeechRecognizer(BaseSpeechRecognizer speechRecognizer) {
         mSpeechRecognizer = speechRecognizer;
         mSpeechRecognizer.setSpeechRecognitionListener(this);
@@ -205,6 +219,7 @@ public class VoiceGenie extends SpeechMediator implements BaseSpeechRecognizer.S
         return mSemanticProcessor;
     }
 
+    @Inject
     public void setSemanticProcessor(BaseSemanticProcessor semanticProcessor) {
         mSemanticProcessor = semanticProcessor;
         mSemanticProcessor.setSemanticProcessListener(this);
@@ -214,6 +229,7 @@ public class VoiceGenie extends SpeechMediator implements BaseSpeechRecognizer.S
         return mTTSEngine;
     }
 
+    @Inject
     public void setTTSEngine(BaseTTSEngine engine) {
         mTTSEngine = engine;
         mTTSEngine.setTTSListener(this);
@@ -223,7 +239,13 @@ public class VoiceGenie extends SpeechMediator implements BaseSpeechRecognizer.S
         return mSceneSpeechManager;
     }
 
+    @Inject
     public void setSceneSpeechManager(SceneSpeechManager sceneSpeechManager) {
         mSceneSpeechManager = sceneSpeechManager;
+    }
+
+    @Inject
+    public void setSpeechView(BaseSpeechView speechView) {
+        mSpeechView = speechView;
     }
 }

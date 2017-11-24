@@ -1,13 +1,13 @@
 package com.konka.speech.mediator;
 
-import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
 import com.affy.zlogger.ZLogger;
-import com.konka.speech.mediator.dui.DuiSemanticProcessor;
-import com.konka.speech.mediator.dui.DuiSpeechRecognizer;
-import com.konka.speech.mediator.dui.DuiTTSEngine;
+
+import javax.inject.Inject;
+
+import dagger.android.DaggerService;
 
 /**
  * 负责运行整个语音精灵的基础Service，同时也是供外部唤醒的入口Service
@@ -15,8 +15,9 @@ import com.konka.speech.mediator.dui.DuiTTSEngine;
  * @author ZhangFei
  * @date 2017-11-09
  */
-public class SpeechService extends Service {
-    private VoiceGenie mVoiceGenie;
+public class SpeechService extends DaggerService {
+    @Inject
+    VoiceGenie mVoiceGenie;
     private boolean mInitSuccess;
 
     @Override
@@ -28,21 +29,17 @@ public class SpeechService extends Service {
     public void onCreate() {
         super.onCreate();
         ZLogger.init("Speech").methodCount(1).hideThreadInfo();
-        mVoiceGenie = new VoiceGenie(this);
-        chooseSpeechEngine();
+//        DaggerVoiceGenieComponent.builder()
+//                .voiceGenieModule(new VoiceGenieModule(this))
+//                .build()
+//                .inject(this);
+        initSpeechEngine();
     }
 
     /**
      * 选择和切换语音引擎
      */
-    private void chooseSpeechEngine() {
-        BaseSpeechRecognizer speechRecognizer = new DuiSpeechRecognizer(this, mVoiceGenie);
-        BaseSemanticProcessor semanticProcessor = new DuiSemanticProcessor(this, mVoiceGenie);
-        BaseTTSEngine ttsEngine = new DuiTTSEngine(this, mVoiceGenie);
-        mVoiceGenie.setSpeechRecognizer(speechRecognizer);
-        mVoiceGenie.setSemanticProcessor(semanticProcessor);
-        mVoiceGenie.setTTSEngine(ttsEngine);
-
+    private void initSpeechEngine() {
         mVoiceGenie.initEngine(new Callback<Boolean, String>() {
             @Override
             public void onCompleted(Boolean result) {
@@ -66,7 +63,7 @@ public class SpeechService extends Service {
         while (!mInitSuccess) {
             //暂时这么瞎搞
         }
-        if (intent.getStringExtra("act").equals("cancel")) {
+        if (intent != null && "cancel".equals(intent.getStringExtra("act"))) {
             mVoiceGenie.cancelRecognize();
         } else {
             mVoiceGenie.startRecognize(intent);
