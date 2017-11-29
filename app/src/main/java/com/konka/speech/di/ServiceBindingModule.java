@@ -1,7 +1,7 @@
 package com.konka.speech.di;
 
-import com.konka.speech.mediator.SpeechService;
-import com.konka.speech.mediator.VoiceGenieModule;
+import com.konka.speech.core.SpeechService;
+import com.konka.speech.core.VoiceGenieModule;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;

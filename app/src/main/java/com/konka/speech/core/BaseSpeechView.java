@@ -1,6 +1,8 @@
-package com.konka.speech.mediator;
+package com.konka.speech.core;
 
 import android.content.Context;
+
+import com.konka.speech.di.ServiceScope;
 
 /**
  * 语音精灵界面UI交互控制逻辑
@@ -16,7 +18,11 @@ import android.content.Context;
 public abstract class BaseSpeechView extends Colleague {
     private SpeechViewListener mSpeechViewListener;
 
-    public BaseSpeechView(Context context, SpeechMediator mediator) {
+    public BaseSpeechView(@ServiceScope Context context) {
+        super(context);
+    }
+
+    public BaseSpeechView(@ServiceScope Context context, SpeechMediator mediator) {
         super(context, mediator);
     }
 
@@ -70,12 +76,14 @@ public abstract class BaseSpeechView extends Colleague {
 
     /**
      * 展示用户说法
+     *
      * @param conversation 当轮对话
      */
     public abstract void showUserWord(Conversation conversation);
 
     /**
      * 展示对话回复
+     *
      * @param conversation 当轮对话
      */
     public abstract void showReply(Conversation conversation);

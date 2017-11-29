@@ -1,4 +1,4 @@
-package com.konka.speech.sdk.scene;
+package com.konka.speech.scene;
 
 import android.content.Context;
 

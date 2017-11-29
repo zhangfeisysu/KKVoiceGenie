@@ -37,7 +37,7 @@ public class VoiceGenieFacade {
      * @param sceneJson 全程语音关键词json
      * @param listener  用户说法监听
      */
-    void registerSceneSpeech(String sceneJson, SceneSpeechMode.SceneSpeechListener listener) {
+    public void registerSceneSpeech(String sceneJson, SceneSpeechMode.SceneSpeechListener listener) {
         mSceneSpeechListener = listener;
         mSceneSpeechMode.registerKeywords(sceneJson, listener);
     }
@@ -45,7 +45,7 @@ public class VoiceGenieFacade {
     /**
      * 取消注册全程语音
      */
-    void unregisterSceneSpeech() {
+    public void unregisterSceneSpeech() {
         mSceneSpeechMode.unregisterKeywords();
     }
 
@@ -54,7 +54,7 @@ public class VoiceGenieFacade {
      *
      * @param sceneJson 全程语音关键词json
      */
-    void updateSceneSpeech(String sceneJson) {
+    public void updateSceneSpeech(String sceneJson) {
         mSceneSpeechMode.registerKeywords(sceneJson, mSceneSpeechListener);
     }
 
@@ -63,6 +63,6 @@ public class VoiceGenieFacade {
      *
      * @param globalJson 全局语音业务关键词
      */
-    void updateGlobalSpeech(String globalJson) {
+    public void updateGlobalSpeech(String globalJson) {
     }
 }

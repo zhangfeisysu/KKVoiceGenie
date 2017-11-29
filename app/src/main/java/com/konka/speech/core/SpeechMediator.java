@@ -1,4 +1,4 @@
-package com.konka.speech.mediator;
+package com.konka.speech.core;
 
 import android.content.Context;
 import android.content.Intent;

@@ -1,11 +1,12 @@
-package com.konka.speech.mediator.dui;
+package com.konka.speech.dui;
 
 import android.content.Context;
 
 import com.affy.zlogger.ZLogger;
-import com.konka.speech.mediator.BaseSpeechRecognizer;
-import com.konka.speech.mediator.Callback;
-import com.konka.speech.mediator.SpeechMediator;
+import com.konka.speech.core.BaseSpeechRecognizer;
+import com.konka.speech.core.Callback;
+import com.konka.speech.core.SpeechMediator;
+import com.konka.speech.di.ServiceScope;
 
 /**
  * 思必驰语音识别方案
@@ -15,7 +16,11 @@ import com.konka.speech.mediator.SpeechMediator;
  */
 
 public class DuiSpeechRecognizer extends BaseSpeechRecognizer {
-    public DuiSpeechRecognizer(Context context, SpeechMediator mediator) {
+    public DuiSpeechRecognizer(@ServiceScope Context context) {
+        super(context);
+    }
+
+    public DuiSpeechRecognizer(@ServiceScope Context context, SpeechMediator mediator) {
         super(context, mediator);
     }
 

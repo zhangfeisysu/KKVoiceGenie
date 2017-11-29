@@ -1,8 +1,12 @@
-package com.konka.speech.mediator;
+package com.konka.speech.core;
 
 import android.content.Context;
 
-import com.konka.speech.sdk.scene.SceneSpeechManager;
+import com.konka.speech.di.ForService;
+import com.konka.speech.global.Scanner;
+import com.konka.speech.scene.SceneSpeechManager;
+
+import javax.inject.Inject;
 
 /**
  * 语义理解的基础类，后续替代语义理解方案时基于此类开发
@@ -12,13 +16,24 @@ import com.konka.speech.sdk.scene.SceneSpeechManager;
  */
 
 public abstract class BaseSemanticProcessor extends Colleague {
-    private SemanticProcessListener mSemanticProcessListener;
+    @Inject
     protected SceneSpeechManager mSceneSpeechManager;
+    @Inject
+    protected Scanner mScanner;
+    private SemanticProcessListener mSemanticProcessListener;
 
-    public BaseSemanticProcessor(Context context, SpeechMediator mediator) {
-        super(context, mediator);
-        mSceneSpeechManager = new SceneSpeechManager(context);
+    public BaseSemanticProcessor(@ForService Context context) {
+        super(context);
     }
+
+    public BaseSemanticProcessor(@ForService Context context, SpeechMediator mediator) {
+        super(context, mediator);
+    }
+
+    /**
+     * 初始化
+     */
+    public abstract void init();
 
     /**
      * 开始解析

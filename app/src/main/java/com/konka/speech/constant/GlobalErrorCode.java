@@ -1,4 +1,4 @@
-package com.konka.speech;
+package com.konka.speech.constant;
 
 /**
  * @author ZhangFei

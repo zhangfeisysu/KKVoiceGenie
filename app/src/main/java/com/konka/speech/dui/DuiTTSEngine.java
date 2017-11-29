@@ -1,10 +1,11 @@
-package com.konka.speech.mediator.dui;
+package com.konka.speech.dui;
 
 import android.content.Context;
 
 import com.affy.zlogger.ZLogger;
-import com.konka.speech.mediator.BaseTTSEngine;
-import com.konka.speech.mediator.SpeechMediator;
+import com.konka.speech.core.BaseTTSEngine;
+import com.konka.speech.core.SpeechMediator;
+import com.konka.speech.di.ServiceScope;
 
 /**
  * @author ZhangFei
@@ -13,7 +14,11 @@ import com.konka.speech.mediator.SpeechMediator;
 
 public class DuiTTSEngine extends BaseTTSEngine {
 
-    public DuiTTSEngine(Context context, SpeechMediator mediator) {
+    public DuiTTSEngine(@ServiceScope Context context) {
+        super(context);
+    }
+
+    public DuiTTSEngine(@ServiceScope Context context, SpeechMediator mediator) {
         super(context, mediator);
     }
 

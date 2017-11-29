@@ -1,7 +1,7 @@
-package com.konka.speech.sdk.constant;
+package com.konka.speech.scene.constant;
 
 /**
- * 全局Intent常量，包括广播的action，extra，service的action等
+ * 全程语音Intent常量，包括广播的action，extra，service的action等
  *
  * @author ZhangFei
  * @date 2017-11-13

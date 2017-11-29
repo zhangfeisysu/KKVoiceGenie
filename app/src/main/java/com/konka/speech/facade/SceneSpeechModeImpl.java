@@ -19,12 +19,12 @@ import com.konka.speech.constant.IntentConstants;
 
 class SceneSpeechModeImpl implements SceneSpeechMode {
     /**
-     * {@link com.konka.speech.sdk.constant.IntentConstants#EXTRA_SCENE_SPEECH_KEYWORDS}
+     * {@link com.konka.speech.scene.constant.IntentConstants#EXTRA_SCENE_SPEECH_KEYWORDS}
      */
 
     static final String EXTRA_SCENE_SPEECH_KEYWORDS = "konka.speech.scene_speech.KEYWORDS";
     /**
-     * {@link com.konka.speech.sdk.constant.IntentConstants#ACTION_SCENE_SPEECH_UPLOAD_KEYWORDS}
+     * {@link com.konka.speech.scene.constant.IntentConstants#ACTION_SCENE_SPEECH_UPLOAD_KEYWORDS}
      */
     static final String ACTION_SCENE_SPEECH_UPLOAD_KEYWORDS = "konka.speech.scene_speech.UPLOAD_KEYWORDS";
     /**
@@ -67,12 +67,12 @@ class SceneSpeechModeImpl implements SceneSpeechMode {
         static final String ACTION_VOICE_GENIE_START = "konka.speech.intent.action.VOICE_GENIE_START";
 
         /**
-         * {@link com.konka.speech.sdk.constant.IntentConstants#ACTION_SCENE_SPEECH_FEEDBACK}
+         * {@link com.konka.speech.scene.constant.IntentConstants#ACTION_SCENE_SPEECH_FEEDBACK}
          */
         static final String ACTION_SCENE_SPEECH_FEEDBACK = "konka.speech.intent.action.scene_speech.FEEDBACK";
 
         /**
-         * {@link com.konka.speech.sdk.constant.IntentConstants#EXTRA_SCENE_SPEECH_HIT_KEYWORDS}
+         * {@link com.konka.speech.scene.constant.IntentConstants#EXTRA_SCENE_SPEECH_HIT_KEYWORDS}
          */
         static final String EXTRA_SCENE_SPEECH_HIT_KEYWORDS = "konka.speech.extra.scene_speech.HIT_KEYWORDS";
 

@@ -1,4 +1,4 @@
-package com.konka.speech.mediator;
+package com.konka.speech.core;
 
 import android.content.Intent;
 import android.os.IBinder;
@@ -29,10 +29,6 @@ public class SpeechService extends DaggerService {
     public void onCreate() {
         super.onCreate();
         ZLogger.init("Speech").methodCount(1).hideThreadInfo();
-//        DaggerVoiceGenieComponent.builder()
-//                .voiceGenieModule(new VoiceGenieModule(this))
-//                .build()
-//                .inject(this);
         initSpeechEngine();
     }
 

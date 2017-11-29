@@ -1,8 +1,8 @@
-package com.konka.speech.sdk.scene;
+package com.konka.speech.scene;
 
 import android.content.Context;
 
-import com.konka.speech.di.ForService;
+import com.konka.speech.di.ForApp;
 
 import java.util.List;
 
@@ -17,10 +17,12 @@ import javax.inject.Inject;
 
 public class SceneSpeechManager {
     private Context mContext;
-    private SceneSpeechMode mSceneSpeechMode;
 
     @Inject
-    public SceneSpeechManager(@ForService Context context) {
+    SceneSpeechModeImpl mSceneSpeechMode;
+
+    @Inject
+    public SceneSpeechManager(@ForApp Context context) {
         mContext = context;
         mSceneSpeechMode = new SceneSpeechModeImpl(context);
     }

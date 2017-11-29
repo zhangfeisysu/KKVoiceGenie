@@ -1,4 +1,4 @@
-package com.konka.speech.mediator;
+package com.konka.speech.core;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -12,7 +12,7 @@ import android.os.Looper;
 import android.os.Message;
 
 import com.affy.zlogger.ZLogger;
-import com.konka.speech.GlobalErrorCode;
+import com.konka.speech.constant.GlobalErrorCode;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -232,7 +232,7 @@ class Dispatcher {
 
         private final Dispatcher mDispatcher;
 
-        public DispatcherHandler(Looper looper, Dispatcher dispatcher) {
+        DispatcherHandler(Looper looper, Dispatcher dispatcher) {
             super(looper);
             this.mDispatcher = dispatcher;
         }

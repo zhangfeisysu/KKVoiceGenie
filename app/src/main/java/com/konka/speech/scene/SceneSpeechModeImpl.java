@@ -1,17 +1,19 @@
-package com.konka.speech.sdk.scene;
+package com.konka.speech.scene;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
+import com.konka.speech.di.ForApp;
+
 import javax.inject.Inject;
 
 import static com.konka.speech.constant.IntentConstants.EXTRA_PACKAGE_NAME;
-import static com.konka.speech.sdk.constant.IntentConstants.ACTION_SCENE_SPEECH_FEEDBACK;
-import static com.konka.speech.sdk.constant.IntentConstants.ACTION_SCENE_SPEECH_UPLOAD_KEYWORDS;
-import static com.konka.speech.sdk.constant.IntentConstants.EXTRA_SCENE_SPEECH_HIT_KEYWORDS;
-import static com.konka.speech.sdk.constant.IntentConstants.EXTRA_SCENE_SPEECH_KEYWORDS;
+import static com.konka.speech.scene.constant.IntentConstants.ACTION_SCENE_SPEECH_FEEDBACK;
+import static com.konka.speech.scene.constant.IntentConstants.ACTION_SCENE_SPEECH_UPLOAD_KEYWORDS;
+import static com.konka.speech.scene.constant.IntentConstants.EXTRA_SCENE_SPEECH_HIT_KEYWORDS;
+import static com.konka.speech.scene.constant.IntentConstants.EXTRA_SCENE_SPEECH_KEYWORDS;
 
 /**
  * 采用广播的方式实现全程语音
@@ -24,9 +26,9 @@ class SceneSpeechModeImpl extends SceneSpeechMode<SceneKeywords> {
     private SceneKeywords mSceneKeywords;
 
     @Inject
-    SceneSpeechModeImpl(Context context) {
+    SceneSpeechModeImpl(@ForApp Context context) {
         super(context);
-        mSceneKeywords = new SceneKeywords();
+//        mSceneKeywords = new SceneKeywords();
     }
 
     @Override

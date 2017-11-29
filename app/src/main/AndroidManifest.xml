@@ -22,7 +22,7 @@
         </activity>
 
         <service
-            android:name=".mediator.SpeechService"
+            android:name=".core.SpeechService"
             android:enabled="true"
             android:exported="true">
         </service>

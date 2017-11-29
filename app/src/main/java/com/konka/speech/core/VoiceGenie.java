@@ -1,4 +1,4 @@
-package com.konka.speech.mediator;
+package com.konka.speech.core;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,19 +9,8 @@ import android.util.Log;
 
 import com.affy.zlogger.ZLogger;
 import com.konka.speech.di.ForService;
-import com.konka.speech.sdk.scene.SceneSpeechManager;
 
 import javax.inject.Inject;
-
-import static com.konka.speech.mediator.Dispatcher.CONVERSATION_RECOGNITION_COMPLETE;
-import static com.konka.speech.mediator.Dispatcher.CONVERSATION_RECOGNITION_START;
-import static com.konka.speech.mediator.Dispatcher.CONVERSATION_RECORD_COMPLETE;
-import static com.konka.speech.mediator.Dispatcher.CONVERSATION_RECORD_START;
-import static com.konka.speech.mediator.Dispatcher.CONVERSATION_RECORD_VOLUME;
-import static com.konka.speech.mediator.Dispatcher.CONVERSATION_TTS_COMPLETE;
-import static com.konka.speech.mediator.Dispatcher.CONVERSATION_TTS_START;
-import static com.konka.speech.mediator.Dispatcher.CONVERSATION_UNDERSTANDING_COMPLETE;
-import static com.konka.speech.mediator.Dispatcher.CONVERSATION_UNDERSTANDING_START;
 
 /**
  * 实现中介者的接口，负责处理语音理解，语义理解，TTS播报三者之间的具体交互
@@ -34,10 +23,7 @@ public class VoiceGenie extends SpeechMediator implements BaseSpeechRecognizer.S
         BaseSemanticProcessor.SemanticProcessListener,
         BaseTTSEngine.TTSListener,
         BaseSpeechView.SpeechViewListener {
-
-    @Inject
-    SceneSpeechManager mSceneSpeechManager;
-    Dispatcher mDispatcher;
+    private Dispatcher mDispatcher;
     private int mSessionIdCounter = -1;
 
     private static final Handler mMainHandler = new Handler(Looper.getMainLooper()) {
@@ -45,49 +31,49 @@ public class VoiceGenie extends SpeechMediator implements BaseSpeechRecognizer.S
         public void handleMessage(Message msg) {
             Log.d("zftest", "voiceGenie current thread " + Thread.currentThread().getName());
             switch (msg.what) {
-                case CONVERSATION_RECORD_START: {
+                case Dispatcher.CONVERSATION_RECORD_START: {
                     Conversation conversation = (Conversation) msg.obj;
                     conversation.getVoiceGenie().onRecordStart();
                     break;
                 }
-                case CONVERSATION_RECORD_VOLUME: {
+                case Dispatcher.CONVERSATION_RECORD_VOLUME: {
                     Conversation conversation = (Conversation) msg.obj;
                     conversation.getVoiceGenie().onRecordVolumeChanged(0);
                     break;
                 }
 
-                case CONVERSATION_RECORD_COMPLETE: {
+                case Dispatcher.CONVERSATION_RECORD_COMPLETE: {
                     Conversation conversation = (Conversation) msg.obj;
                     conversation.getVoiceGenie().onRecordComplete();
                     break;
                 }
 
-                case CONVERSATION_RECOGNITION_START: {
+                case Dispatcher.CONVERSATION_RECOGNITION_START: {
                     Conversation conversation = (Conversation) msg.obj;
                     conversation.getVoiceGenie().onSpeechRecognitionStart();
                     break;
                 }
-                case CONVERSATION_RECOGNITION_COMPLETE: {
+                case Dispatcher.CONVERSATION_RECOGNITION_COMPLETE: {
                     Conversation conversation = (Conversation) msg.obj;
                     conversation.getVoiceGenie().onSpeechRecognitionComplete(conversation);
                     break;
                 }
-                case CONVERSATION_UNDERSTANDING_START: {
+                case Dispatcher.CONVERSATION_UNDERSTANDING_START: {
                     Conversation conversation = (Conversation) msg.obj;
                     conversation.getVoiceGenie().onSemanticUnderstandingStart();
                     break;
                 }
-                case CONVERSATION_UNDERSTANDING_COMPLETE: {
+                case Dispatcher.CONVERSATION_UNDERSTANDING_COMPLETE: {
                     Conversation conversation = (Conversation) msg.obj;
                     conversation.getVoiceGenie().onSemanticUnderstandingComplete(conversation);
                     break;
                 }
-                case CONVERSATION_TTS_START: {
+                case Dispatcher.CONVERSATION_TTS_START: {
                     Conversation conversation = (Conversation) msg.obj;
                     conversation.getVoiceGenie().onTTSStart(conversation.getWord());
                     break;
                 }
-                case CONVERSATION_TTS_COMPLETE: {
+                case Dispatcher.CONVERSATION_TTS_COMPLETE: {
                     Conversation conversation = (Conversation) msg.obj;
                     conversation.getVoiceGenie().onTTSComplete();
                     break;
@@ -103,13 +89,17 @@ public class VoiceGenie extends SpeechMediator implements BaseSpeechRecognizer.S
         super(context);
         mSessionIdCounter = -1;
         mDispatcher = new Dispatcher(context, this, mMainHandler);
-//        mSpeechView = new TestSpeechView(context, this);
+        VoiceGenieProxy.getInstance().setVoiceGenie(this);
     }
+
 
     @Override
     public void initEngine(Callback<Boolean, String> callback) {
         if (mSpeechRecognizer != null) {
             mSpeechRecognizer.init(callback);
+        }
+        if (mSemanticProcessor!=null){
+            mSemanticProcessor.init();
         }
     }
 
@@ -137,7 +127,6 @@ public class VoiceGenie extends SpeechMediator implements BaseSpeechRecognizer.S
 
     @Override
     public void onRecordStart() {
-        Log.d("zftest", "current thread during onRecordStart:" + Thread.currentThread().getName());
         ZLogger.d("========== onRecordStart ============");
         mSpeechView.show();
         mSpeechView.performRecord();
@@ -213,6 +202,7 @@ public class VoiceGenie extends SpeechMediator implements BaseSpeechRecognizer.S
     public void setSpeechRecognizer(BaseSpeechRecognizer speechRecognizer) {
         mSpeechRecognizer = speechRecognizer;
         mSpeechRecognizer.setSpeechRecognitionListener(this);
+        mSpeechRecognizer.setMediator(this);
     }
 
     public BaseSemanticProcessor getSemanticProcessor() {
@@ -223,6 +213,7 @@ public class VoiceGenie extends SpeechMediator implements BaseSpeechRecognizer.S
     public void setSemanticProcessor(BaseSemanticProcessor semanticProcessor) {
         mSemanticProcessor = semanticProcessor;
         mSemanticProcessor.setSemanticProcessListener(this);
+        mSemanticProcessor.setMediator(this);
     }
 
     public BaseTTSEngine getTTSEngine() {
@@ -233,15 +224,7 @@ public class VoiceGenie extends SpeechMediator implements BaseSpeechRecognizer.S
     public void setTTSEngine(BaseTTSEngine engine) {
         mTTSEngine = engine;
         mTTSEngine.setTTSListener(this);
-    }
-
-    public SceneSpeechManager getSceneSpeechManager() {
-        return mSceneSpeechManager;
-    }
-
-    @Inject
-    public void setSceneSpeechManager(SceneSpeechManager sceneSpeechManager) {
-        mSceneSpeechManager = sceneSpeechManager;
+        mTTSEngine.setMediator(this);
     }
 
     @Inject

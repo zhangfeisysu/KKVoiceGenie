@@ -1,6 +1,8 @@
-package com.konka.speech.mediator;
+package com.konka.speech.core;
 
 import android.content.Context;
+
+import com.konka.speech.di.ServiceScope;
 
 /**
  * 语音识别过程的基础类，后续替代语音识别方案时基于此类开发
@@ -12,13 +14,18 @@ import android.content.Context;
 public abstract class BaseSpeechRecognizer extends Colleague {
     private SpeechRecognitionListener mSpeechRecognitionListener;
 
-    public BaseSpeechRecognizer(Context context, SpeechMediator mediator) {
+    public BaseSpeechRecognizer(@ServiceScope Context context) {
+        super(context);
+    }
+
+    public BaseSpeechRecognizer(@ServiceScope Context context, SpeechMediator mediator) {
         super(context, mediator);
     }
 
     /**
      * 初始化识别引擎
      *
+     * @param callback 初始化结果回调
      * @return 初始化结果
      */
     public abstract void init(Callback<Boolean, String> callback);

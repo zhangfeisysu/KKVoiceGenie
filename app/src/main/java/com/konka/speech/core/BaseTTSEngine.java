@@ -1,6 +1,8 @@
-package com.konka.speech.mediator;
+package com.konka.speech.core;
 
 import android.content.Context;
+
+import com.konka.speech.di.ServiceScope;
 
 /**
  * TTS引擎基础类，后续更换方案基于此类开发
@@ -12,7 +14,11 @@ import android.content.Context;
 public abstract class BaseTTSEngine extends Colleague {
     private TTSListener mTTSListener;
 
-    public BaseTTSEngine(Context context, SpeechMediator mediator) {
+    public BaseTTSEngine(@ServiceScope Context context) {
+        super(context);
+    }
+
+    public BaseTTSEngine(@ServiceScope Context context, SpeechMediator mediator) {
         super(context, mediator);
     }
 

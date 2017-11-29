@@ -35,6 +35,4 @@ public class SpeechApplication extends DaggerApplication {
         appComponent.inject(this);
         return appComponent;
     }
-
-
 }

@@ -1,4 +1,4 @@
-package com.konka.speech.mediator;
+package com.konka.speech.core;
 
 /**
  * 通用回调方法

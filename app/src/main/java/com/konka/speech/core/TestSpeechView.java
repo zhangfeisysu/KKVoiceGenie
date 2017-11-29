@@ -1,8 +1,10 @@
-package com.konka.speech.mediator;
+package com.konka.speech.core;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.view.WindowManager;
+
+import com.konka.speech.di.ServiceScope;
 
 /**
  * @author ZhangFei
@@ -10,14 +12,18 @@ import android.view.WindowManager;
  */
 
 public class TestSpeechView extends BaseSpeechView {
-    public TestSpeechView(Context context, SpeechMediator mediator) {
+    public TestSpeechView(@ServiceScope Context context) {
+        super(context);
+    }
+
+    public TestSpeechView(@ServiceScope Context context, SpeechMediator mediator) {
         super(context, mediator);
     }
 
     private void showToast(String text) {
 //        Toast.makeText(mContext, text, Toast.LENGTH_SHORT).show();
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setMessage("线程名：" + Thread.currentThread().getName() + " and "+text);
+        builder.setMessage("线程名：" + Thread.currentThread().getName() + " and " + text);
         AlertDialog alert = builder.create();
         alert.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
         alert.show();

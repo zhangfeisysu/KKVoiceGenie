@@ -1,4 +1,4 @@
-package com.konka.speech.mediator;
+package com.konka.speech.core;
 
 import android.content.Context;
 
@@ -12,8 +12,16 @@ public abstract class Colleague {
     protected Context mContext;
     protected SpeechMediator mMediator;
 
+    public Colleague(Context context) {
+        mContext = context;
+    }
+
     public Colleague(Context context, SpeechMediator mediator) {
         mContext = context;
+        mMediator = mediator;
+    }
+
+    public void setMediator(SpeechMediator mediator) {
         mMediator = mediator;
     }
 }

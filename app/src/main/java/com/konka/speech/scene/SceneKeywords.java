@@ -1,7 +1,9 @@
-package com.konka.speech.sdk.scene;
+package com.konka.speech.scene;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 /**
  * @author ZhangFei
@@ -12,6 +14,7 @@ public class SceneKeywords {
     private String mPackageName;
     private List<String> mKeywordsList;
 
+    @Inject
     public SceneKeywords() {
         mKeywordsList = new ArrayList<>(10);
     }

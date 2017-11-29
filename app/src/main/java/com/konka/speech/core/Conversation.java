@@ -1,4 +1,4 @@
-package com.konka.speech.mediator;
+package com.konka.speech.core;
 
 /**
  * 抽象出每次对话请求，采用一问一答的模式，每段对话包含唯一的sessionId。
